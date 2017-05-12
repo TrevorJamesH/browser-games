@@ -14,13 +14,12 @@ class Square{
 class Game extends Component {
   constructor(){
     super()
-    this.state = {
+    this.state = JSON.parse(sessionStorage.getItem('state')) || {
       board: this.initializeBoard(),
       selected: null,
       legalMoves: null,
-      nextPlayer: 'White'
+      nextPlayer: 'White',
     }
-    this.initializePieces()
   }
 
   initializeBoard(){
@@ -34,8 +33,8 @@ class Game extends Component {
     return board
   }
 
-  initializePieces(){
-    let board = this.state.board
+  newGame(){
+    let board = this.initializeBoard()
     Object.values(board[7]).forEach( square => square.piece = new Pawn('White'))
     Object.values(board[2]).forEach( square => square.piece = new Pawn('Black'))
     board[1][3].piece = new Bishop('Black')
@@ -54,6 +53,8 @@ class Game extends Component {
     board[8][5].piece = new Queen('White')
     board[1][4].piece = new King('Black')
     board[8][4].piece = new King('White')
+    this.setState({board:board, nextPlayer:'White'})
+    sessionStorage.setItem('state', JSON.stringify(this.state));
   }
 
   click(x,y){
@@ -66,7 +67,6 @@ class Game extends Component {
     let piece = board[y][x].piece
     if( piece.color === this.state.nextPlayer){
       this.setState({selected: {x:x,y:y}, legalMoves: board[y][x].piece.legalMoves(x,y,board)})
-      console.log('state.legalMoves',this.state.legalMoves)
       return
     }
     if(this.selectedSquare() && this.state.legalMoves.includes(square)){
@@ -74,7 +74,6 @@ class Game extends Component {
     }
     else if(piece !== 'Blank' && piece.color === this.state.nextPlayer){
       this.setState({selected: {x:x,y:y}, legalMoves: board[y][x].piece.legalMoves(x,y,board)})
-      console.log('state.legalMoves',this.state.legalMoves)
     }
   }
 
@@ -83,9 +82,10 @@ class Game extends Component {
     let currentState = this.state
     currentState.nextPlayer === "White" ? currentState.nextPlayer = "Black" : currentState.nextPlayer = "White"
     currentState.board[y][x].piece = this.selectedSquare().piece
+    currentState.board[this.state.selected.y][this.state.selected.x].piece = 'Blank'
+    currentState.selected = null
     this.setState(currentState)
-    this.selectedSquare().piece = 'Blank'
-    this.setState({selected: null})
+    sessionStorage.setItem('state', JSON.stringify(currentState));
   }
 
   getLegalMoves(){
@@ -124,8 +124,13 @@ class Game extends Component {
     })
 
     return(
-      <div className="Board">
-        {boardRender}
+      <div>
+        <div className="Board">
+          {boardRender}
+        </div>
+        <div>
+          <button className='NewGameButton' onClick={() => this.newGame()}> New Game </button>
+        </div>
       </div>
     )
   }
