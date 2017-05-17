@@ -11,10 +11,5 @@ $ npm install
 
 $ npm start
 ...
-Starting up http-server, serving ./public
-Available on:
-  http://127.0.0.1:4321
-  http://10.0.1.11:4321
-```
 
-Then open `http://localhost:4321/` in your browser of choice and play away!
+Contract and specs in contract.md
