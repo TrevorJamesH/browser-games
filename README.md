@@ -11,5 +11,5 @@ $ npm install
 
 $ npm start
 ...
-
+```
 Contract and specs in contract.md
