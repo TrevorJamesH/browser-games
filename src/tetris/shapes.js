@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import './css/tetris.css'
+
+
 
 class J {
   constructor(){
@@ -212,5 +212,25 @@ class O {
   }
 }
 
+class Shapes{
 
-export {T,J,L,S,Z,I,O}
+  static getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  static newShape(){
+    let number = this.getRandomInt(1,8)
+    if(number === 1){return new O()}
+    if(number === 2){return new T()}
+    if(number === 3){return new J()}
+    if(number === 4){return new L()}
+    if(number === 5){return new S()}
+    if(number === 6){return new Z()}
+    if(number === 7){return new I()}
+  }
+}
+
+
+export {Shapes}
