@@ -1,13 +1,51 @@
 .Square{
   display: flex;
   flex-direction: column;
-  height: 35px;
-  width: 35px;
+  height: 3vh;
+  width: 3vh;
   background-color: black;
-  margin: 2px;
+  border: .3vh;
+  border-style: solid;
 }
 
 .Row{
+  display: flex;
+  flex-direction: row;
+}
+
+.Gameboard{
+  display: flex;
+  flex-direction: column;
+  padding: 5vh;
+  justify-content: center;
+}
+
+.Upcoming{
+  padding: 5vh;
+  border-color: grey;
+}
+
+.Page{
+  background: grey;
+}
+
+.StartButton{
+  display: flex;
+  justify-content: center;
+  width: 30vh;
+  padding: 1vh;
+  border: 1vh;
+  background: purple;
+  font-size: 3vh;
+}
+
+.Title{
+  text-align: center;
+  padding: 1vh;
+  font-family: Century Gothic, sans-serif;
+}
+
+.Layout{
   display: flex;
   flex-direction: row;
 }
@@ -38,4 +76,9 @@
 
 .Orange{
   background-color: orange;
+}
+
+.Grey{
+  background-color: grey;
+  border-color: grey;
 }
