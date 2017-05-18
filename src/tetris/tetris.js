@@ -16,7 +16,7 @@ class Tetris extends Component {
       rotation: 0,
       score: 0,
       play: false,
-      interval: 500
+      interval: null
     }
   }
 
@@ -68,6 +68,7 @@ class Tetris extends Component {
       })
       let currentState = this.state
       if( complete ){
+        this.speedUp()
         currentState.score++
         currentState.squares[i] = currentState.squares[i].map( square => square = 'Black')
         for( let j = i; j > 0; j--){
@@ -79,17 +80,17 @@ class Tetris extends Component {
   }
 
   handleKeyPress(event){
-    if(event.key === 'w' && !Collision.rotate( this.state.squares, this.state.tetromino, this.state.location, this.state.rotation )){
+    if(event.key === 'w' && this.state.play === true && !Collision.rotate( this.state.squares, this.state.tetromino, this.state.location, this.state.rotation )){
       this.rotate()
       clearTimeout()
     }
-    if(event.key === 'a' && !Collision.left( this.state.squares, this.state.tetromino, this.state.location, this.state.rotation )){
+    if(event.key === 'a' && this.state.play === true &&  !Collision.left( this.state.squares, this.state.tetromino, this.state.location, this.state.rotation )){
       this.move( -1 )
     }
-    if(event.key === 'd' && !Collision.right( this.state.squares, this.state.tetromino, this.state.location, this.state.rotation )){
+    if(event.key === 'd' && this.state.play === true &&  !Collision.right( this.state.squares, this.state.tetromino, this.state.location, this.state.rotation )){
       this.move( 1 )
     }
-    if(event.key === 's'){
+    if(event.key === 's' && this.state.play === true){
       this.down()
     }
   }
@@ -110,13 +111,12 @@ class Tetris extends Component {
     )
   }
 
-  tick(){
-    this.down()
-  }
-
   down(){
+    if( !this.state.tetromino ){
+      return
+    }
     if( Collision.down( this.state.squares, this.state.tetromino, this.state.location, this.state.rotation )){
-      if( this.state.location <= 2 ){
+      if( this.state.location[0] <= 1 ){
         this.gameOver()
       }else{
         this.setTetromino()
@@ -130,46 +130,69 @@ class Tetris extends Component {
     }
   }
 
-  playPause(){
-    if(!this.state.play){
-      let intervalID = setInterval( () => this.tick(),this.state.interval)
-      this.setState({intervalID: intervalID})
-      this.setState({play: true})
-      this.nextShape()
-    }
-    if(this.state.play){
-      this.setState({play: false})
-      clearInterval( this.state.intervalID )
-    }
+  startButton(){
+    this.newGame()
   }
 
   gameOver(){
-    clearInterval( this.state.intervalID )
+    console.log('gameOver')
+    clearTimeout(this.state.intervalId)
+    this.setTetromino()
     this.setState({
       tetromino: null,
-      nextTetromino: Shapes.newShape(),
       location: null,
       rotation: 0,
-      score: 0,
       play: 'GameOver',
       interval: 500
     })
   }
 
+  tick(){
+    this.down()
+    let intervalId = setTimeout( () => this.tick(), this.state.interval)
+    this.setState({intervalId: intervalId})
+  }
+
+  speedUp(){
+    let newInterval = this.state.interval - 50
+    this.setState({interval: newInterval})
+    console.log('speedUp')
+    console.log('interval',this.state.interval)
+    console.log('intervalID',this.state.intervalID)
+  }
+
+  newGame(){
+    console.log('newGame')
+    clearTimeout(this.state.intervalId)
+    this.setState({
+      squares: this.initializeSquares(),
+      tetromino: null,
+      nextTetromino: Shapes.newShape(),
+      location: [0,4],
+      rotation: 0,
+      score: 0,
+      play: true,
+      interval: 500
+    })
+    this.nextShape()
+    this.tick()
+
+  }
+
   render(){
-    let buttonText = !this.state.play ? 'Start Game' : 'Pause Game'
-    let gameOver = this.state.play === 'GameOver' ? 'Game Over' : ''
+    let buttonText = !this.state.play ? 'Start Game' : 'New Game'
+    let gameOver = this.state.play === 'GameOver' ? 'Game Over    ' : ''
 
     return(
       <div onKeyPress={this.handleKeyPress.bind(this)} className='Page'>
         <div className="Title">
           <h1>Tetross</h1>
-          <h2>{gameOver}Score:{this.state.score}</h2>
+          <h2>{gameOver}Score: {this.state.score}</h2>
         </div>
         <div className='Layout'>
           <div className='Gameboard'>
             <GameBoard squares={this.state.squares} rotation={this.state.rotation} location={this.state.location} tetromino={this.state.tetromino} />
-            <button onClick={this.playPause.bind(this)} className='StartButton'>{buttonText}</button>
+            <button onClick={this.startButton.bind(this)} className='StartButton'>{buttonText}</button>
           </div>
           <div className='Upcoming'>
             <Upcoming nextTetromino={this.state.nextTetromino}/>

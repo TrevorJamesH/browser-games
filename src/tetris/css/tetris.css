@@ -22,6 +22,8 @@
 
 .Upcoming{
   padding: 5vh;
+  width: 15vh;
+  justify-content: center;
   border-color: grey;
 }
 
@@ -48,6 +50,7 @@
 .Layout{
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .Purple{
