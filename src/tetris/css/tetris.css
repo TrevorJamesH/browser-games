@@ -18,6 +18,8 @@
   flex-direction: column;
   padding: 5vh;
   justify-content: center;
+  border: 2vh;
+  border-color:blue;
 }
 
 .Upcoming{
@@ -34,7 +36,7 @@
 .StartButton{
   display: flex;
   justify-content: center;
-  width: 30vh;
+  width: 34vh;
   padding: 1vh;
   border: 1vh;
   background: purple;
@@ -42,8 +44,9 @@
 }
 
 .Title{
+  font-size: 2vh;
   text-align: center;
-  padding: 1vh;
+  padding: .5vh;
   font-family: Century Gothic, sans-serif;
 }
 

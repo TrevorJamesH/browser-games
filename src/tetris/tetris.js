@@ -4,6 +4,7 @@ import { Shapes } from './shapes'
 import { GameBoard } from './gameboard'
 import { Collision } from './checks'
 import { Upcoming } from './upcoming'
+import { Controls } from './controls'
 
 class Tetris extends Component {
   constructor(){
@@ -52,12 +53,8 @@ class Tetris extends Component {
         }
       })
     })
-    currentState.rotation = 0
-    currentState.location = null
-    currentState.tetromino = null
-    this.setState( currentState )
+    this.setState( {squares: currentState.squares} )
     this.completeCheck()
-    this.nextShape()
   }
 
   completeCheck(){
@@ -71,11 +68,11 @@ class Tetris extends Component {
         this.speedUp()
         currentState.score++
         currentState.squares[i] = currentState.squares[i].map( square => square = 'Black')
-        for( let j = i; j > 0; j--){
+        for( let j = i; j > 0; j-- ){
           currentState.squares[j] = JSON.parse(JSON.stringify(currentState.squares[j-1]))
         }
       }
-      this.setState(currentState)
+      this.setState({squares: currentState.squares, score: currentState.score})
     }
   }
 
@@ -120,6 +117,7 @@ class Tetris extends Component {
         this.gameOver()
       }else{
         this.setTetromino()
+        this.nextShape()
       }
     }else{
       this.setState(
@@ -136,7 +134,6 @@ class Tetris extends Component {
 
   gameOver(){
     console.log('gameOver')
-    clearTimeout(this.state.intervalId)
     this.setTetromino()
     this.setState({
       tetromino: null,
@@ -148,6 +145,7 @@ class Tetris extends Component {
   }
 
   tick(){
+    console.log('location',this.state.location)
     this.down()
     let intervalId = setTimeout( () => this.tick(), this.state.interval)
     this.setState({intervalId: intervalId})
@@ -158,7 +156,6 @@ class Tetris extends Component {
     this.setState({interval: newInterval})
     console.log('speedUp')
     console.log('interval',this.state.interval)
-    console.log('intervalID',this.state.intervalID)
   }
 
   newGame(){
@@ -166,7 +163,7 @@ class Tetris extends Component {
     clearTimeout(this.state.intervalId)
     this.setState({
       squares: this.initializeSquares(),
-      tetromino: null,
+      // tetromino: null,
       nextTetromino: Shapes.newShape(),
       location: [0,4],
       rotation: 0,
@@ -196,6 +193,7 @@ class Tetris extends Component {
           </div>
           <div className='Upcoming'>
             <Upcoming nextTetromino={this.state.nextTetromino}/>
+            <Controls/>
           </div>
         </div>
       </div>
