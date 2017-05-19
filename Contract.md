@@ -21,11 +21,9 @@ General
 
 [x] React is used for DOM manipulation code
 
-[x] Tetris game can be found at public/chess.html
-
 [x] The board can scale to the window size
 
-[x] Game page is linked from public/index.html
+[x] Game page is linked from src/index.html
 
 [x] Tetris game is playable
 
